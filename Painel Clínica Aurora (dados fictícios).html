@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel Clínica Aurora (dados fictícios)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f5f3f7;--card:#fff;--ink:#2b1d3a;--mut:#6f6580;--line:#e4dfea;--p:#b8456f;--s:#2f8f9d;--g:#c9a24a;--v:#6b5bd6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17111f;--card:#231a30;--ink:#f0eaf6;--mut:#a99cbd;--line:#352a46}}
+:root[data-theme="dark"]{--bg:#17111f;--card:#231a30;--ink:#f0eaf6;--mut:#a99cbd;--line:#352a46}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,sans-serif}
+header{padding:20px 16px 8px;max-width:1100px;margin:0 auto}
+h1{font-size:22px;margin:0}header p{margin:2px 0 0;color:var(--mut);font-size:13px}
+nav{display:flex;gap:6px;padding:10px 16px;max-width:1100px;margin:0 auto;overflow-x:auto}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:20px;font:600 14px Figtree,system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+nav button.on{background:var(--p);border-color:var(--p);color:#fff}
+main{max-width:1100px;margin:0 auto;padding:0 16px 32px}
+.tab{display:none}.tab.on{display:block}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:1fr 1fr!important}}
+.k,.c{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.k b{display:block;font-size:22px;line-height:1.2}.k span{color:var(--mut);font-size:12px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.c h3{font-size:14px;margin:0 0 8px}.c small{color:var(--mut);display:block;margin:-4px 0 8px;font-size:12px}
+.h{position:relative;height:240px}
+.ins li{margin:0 0 8px}.ins{padding-left:18px;margin:0}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;min-width:620px}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--mut);font-weight:600}
+</style>
+</head>
+<body>
+<header><h1>Clínica Aurora Estética</h1><p>Painel de gestão com dados fictícios, nov/2025 a out/2026</p></header>
+<nav id="nav"></nav>
+<main>
+<section class="tab on" id="t0">
+ <div class="kpis" id="k0"></div>
+ <div class="grid">
+  <div class="c"><h3>Faturamento mensal</h3><div class="h"><canvas id="c_fat"></canvas></div></div>
+  <div class="c"><h3>O que os dados mostram</h3><ul class="ins" id="ins"></ul></div>
+ </div>
+</section>
+<section class="tab" id="t1">
+ <div class="kpis" id="k1"></div>
+ <div class="c" style="margin-bottom:12px"><h3>Desempenho por canal</h3><div class="wrap"><table id="tb"></table></div></div>
+ <div class="grid">
+  <div class="c"><h3>Funil geral</h3><small>Do primeiro contato até virar cliente</small><div class="h"><canvas id="c_fun"></canvas></div></div>
+  <div class="c"><h3>Retorno por real investido (ROAS)</h3><small>Receita gerada ÷ investimento, só canais pagos</small><div class="h"><canvas id="c_roas"></canvas></div></div>
+ </div>
+</section>
+<section class="tab" id="t2">
+ <div class="kpis" id="k2"></div>
+ <div class="grid">
+  <div class="c"><h3>Ocupação da agenda</h3><small>Horários ocupados ÷ capacidade (2 cabines)</small><div class="h"><canvas id="c_oc"></canvas></div></div>
+  <div class="c"><h3>No-show por dia da semana</h3><div class="h"><canvas id="c_dow"></canvas></div></div>
+  <div class="c"><h3>Visitas por cliente</h3><small>Quantos clientes fizeram 1, 2, 3… atendimentos</small><div class="h"><canvas id="c_vis"></canvas></div></div>
+  <div class="c"><h3>Faturamento por profissional</h3><div class="h"><canvas id="c_prof"></canvas></div></div>
+ </div>
+</section>
+<section class="tab" id="t3">
+ <div class="kpis" id="k3"></div>
+ <div class="grid">
+  <div class="c"><h3>Receita e margem por procedimento</h3><small>Margem = receita menos custo de insumos estimado</small><div class="h" style="height:320px"><canvas id="c_proc"></canvas></div></div>
+  <div class="c"><h3>Ticket médio mensal</h3><div class="h"><canvas id="c_tk"></canvas></div></div>
+  <div class="c"><h3>Formas de pagamento</h3><div class="h"><canvas id="c_pay"></canvas></div></div>
+ </div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const D = {"kpi": {"fat": 1855100.6199999999, "atend": 2531, "ticket": 732.9516475701304, "noshow": 0.08595160707836765, "ativos": 457, "retorno": 0.6585623678646935, "inv": 102324.31999999999, "cac": 333.30397394136804, "roas": 5.301863232514031, "ocup": 0.5529153354632588, "perda": 153010.0, "inat": 489}, "meses": ["2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10"], "fat": [180984.87, 149850.76, 156943.25, 127252.92, 159790.73, 136357.41, 149227.83, 182467.44, 179192.18, 159850.55, 141678.88, 131503.8], "atend": [233.0, 218.0, 199.0, 194.0, 195.0, 210.0, 186.0, 238.0, 210.0, 225.0, 213.0, 210.0], "ticket": [776.7590987124463, 687.3888073394496, 788.6595477386935, 655.9428865979381, 819.4396410256411, 649.321, 802.3001612903225, 766.6699159663866, 853.2960952380952, 710.4468888888888, 665.1590610328639, 626.2085714285714], "ns": [0.11068702290076336, 0.07627118644067797, 0.0871559633027523, 0.06280193236714976, 0.10138248847926268, 0.07488986784140969, 0.07920792079207921, 0.05555555555555555, 0.10256410256410256, 0.07407407407407407, 0.08583690987124463, 0.11764705882352941], "novos": [32.0, 62.0, 34.0, 55.0, 40.0, 56.0, 41.0, 65.0, 59.0, 58.0, 58.0, 50.0], "ocup": [0.655, 0.5462962962962963, 0.5046296296296297, 0.5390625, 0.5216346153846154, 0.5456730769230769, 0.4855769230769231, 0.6057692307692307, 0.5416666666666666, 0.5841346153846154, 0.5600961538461539, 0.5509259259259259], "canais": [{"canal": "Instagram", "leads": 949, "agend": 329, "comp": 232, "fech": 133, "inv": 48562.83999999999, "cpl": 51.17264488935721, "cac": 365.1341353383458, "roas": 5.344971381410149, "ltv": 1933.771043478261}, {"canal": "Google Ads", "leads": 604, "agend": 273, "comp": 217, "fech": 141, "inv": 35759.54, "cpl": 59.20453642384106, "cac": 253.61375886524823, "roas": 6.689643658727154, "ltv": 2081.812579185521}, {"canal": "Facebook Ads", "leads": 403, "agend": 122, "comp": 72, "fech": 33, "inv": 18001.94, "cpl": 44.669826302729525, "cac": 545.5133333333333, "roas": 2.428848224135843, "ltv": 1559.2302631578948}, {"canal": "Indica\u00e7\u00e3o", "leads": 373, "agend": 263, "comp": 236, "fech": 191, "inv": 0.0, "cpl": null, "cac": null, "roas": null, "ltv": 1764.6423228346457}, {"canal": "WhatsApp org\u00e2nico", "leads": 258, "agend": 135, "comp": 112, "fech": 77, "inv": 0.0, "cpl": null, "cac": null, "roas": null, "ltv": 1883.3542574257426}, {"canal": "Site", "leads": 212, "agend": 86, "comp": 68, "fech": 40, "inv": 0.0, "cpl": null, "cac": null, "roas": null, "ltv": 2478.3752564102565}], "proc": {"n": ["Harmoniza\u00e7\u00e3o facial", "Preenchimento labial", "Toxina botul\u00ednica", "Bioestimulador", "Criolip\u00f3lise", "Microagulhamento", "Depila\u00e7\u00e3o a laser", "Limpeza de pele", "Peeling qu\u00edmico", "Drenagem linf\u00e1tica"], "fat": [353089.24, 330966.71, 314310.91, 285935.66, 133968.91, 119508.39, 97462.98, 95285.58, 75551.71, 49020.53], "margem": [194199.08200000002, 182031.69050000003, 188586.54599999997, 142967.83, 87079.7915, 83655.87299999999, 77970.384, 71464.185, 52886.197, 41667.4505]}, "dow": {"n": ["Seg", "Ter", "Qua", "Qui", "Sex", "S\u00e1b"], "v": [0.10913705583756345, 0.061611374407582936, 0.050505050505050504, 0.06753246753246753, 0.10361445783132531, 0.10192837465564739]}, "prof": {"n": ["Dra. Camila", "Lucas", "Dra. Renata", "Bianca"], "v": [1284302.52, 231431.89, 195060.1, 144306.11]}, "vis": {"n": ["1", "2", "3", "4", "5+"], "v": [323, 202, 157, 103, 161]}, "pay": {"n": ["Cart\u00e3o cr\u00e9dito", "Pix", "Cart\u00e3o d\u00e9bito", "Dinheiro"], "v": [1016, 999, 314, 202]}, "funil": [2799, 1208, 937, 615], "ins": ["Google Ads tem o melhor retorno pago: cada R$ 1 investido virou R$ 6.7 em receita; Facebook Ads \u00e9 o mais fraco, com R$ 2.4.", "Segundas e sextas concentram os no-shows (11% e 10%). Confirma\u00e7\u00e3o ativa por WhatsApp pode recuperar parte dos R$ 153.010 perdidos.", "489 clientes n\u00e3o voltam h\u00e1 mais de 90 dias. Uma campanha de reativa\u00e7\u00e3o \u00e9 o canal de menor custo para crescer.", "De nov/25 a out/26, a ocupa\u00e7\u00e3o m\u00e9dia de 55% da agenda. H\u00e1 espa\u00e7o para vender sem contratar."]};
+const R$ = v => v == null ? '—' : 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+const PC = (v, d = 0) => (v * 100).toFixed(d).replace('.', ',') + '%';
+const X = (v, d = 1) => v == null ? '—' : v.toFixed(d).replace('.', ',') + 'x';
+const MES = D.meses.map(m => ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][+m.slice(5) - 1] + '/' + m.slice(2, 4));
+const css = getComputedStyle(document.documentElement);
+Chart.defaults.font.family = 'Figtree, system-ui, sans-serif';
+Chart.defaults.color = css.getPropertyValue('--mut').trim() || '#6f6580';
+Chart.defaults.borderColor = 'rgba(128,128,128,.18)';
+const COL = ['#b8456f', '#2f8f9d', '#c9a24a', '#6b5bd6', '#e07a5f', '#7a8b99'];
+const K = D.kpi;
+const kp = a => a.map(([l, v]) => `<div class="k"><b>${v}</b><span>${l}</span></div>`).join('');
+document.getElementById('k0').innerHTML = kp([['Faturamento no período', R$(K.fat)], ['Atendimentos realizados', K.atend.toLocaleString('pt-BR')], ['Ticket médio', R$(K.ticket)], ['Clientes ativos (90 dias)', K.ativos]]);
+document.getElementById('k1').innerHTML = kp([['Investimento em mídia', R$(K.inv)], ['CAC médio (canais pagos)', R$(K.cac)], ['ROAS dos canais pagos', X(K.roas)], ['Leads captados', D.funil[0].toLocaleString('pt-BR')]]);
+document.getElementById('k2').innerHTML = kp([['Ocupação da agenda', PC(K.ocup)], ['Taxa de no-show', PC(K.noshow, 1)], ['Clientes que voltaram', PC(K.retorno)], ['Inativos há 90+ dias', K.inat]]);
+document.getElementById('k3').innerHTML = kp([['Faturamento no período', R$(K.fat)], ['Ticket médio', R$(K.ticket)], ['Perdido com no-show', R$(K.perda)], ['Atendimentos realizados', K.atend.toLocaleString('pt-BR')]]);
+document.getElementById('ins').innerHTML = D.ins.map(t => `<li>${t.replace(/(\d)\.(\d) em/, '$1,$2 em').replace(/R\$ (\d)\.(\d)/g, 'R$ $1,$2')}</li>`).join('');
+document.getElementById('tb').innerHTML = '<tr><th>Canal</th><th>Leads</th><th>Agendou</th><th>Compareceu</th><th>Virou cliente</th><th>CPL</th><th>CAC</th><th>ROAS</th><th>LTV</th></tr>' +
+ D.canais.map(c => `<tr><td>${c.canal}</td><td>${c.leads}</td><td>${PC(c.agend / c.leads)}</td><td>${PC(c.comp / c.leads)}</td><td>${PC(c.fech / c.leads)}</td><td>${R$(c.cpl)}</td><td>${R$(c.cac)}</td><td>${X(c.roas)}</td><td>${R$(c.ltv)}</td></tr>`).join('');
+const ch = (id, type, labels, sets, o = {}) => new Chart(document.getElementById(id), {type, data: {labels, datasets: sets}, options: Object.assign({responsive: true, maintainAspectRatio: false, plugins: {legend: {display: sets.length > 1 || type === 'doughnut'}}}, o)});
+const pct = {scales: {y: {ticks: {callback: v => (v * 100).toFixed(0) + '%'}}}, plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => PC(c.parsed.y, 1)}}}};
+let drawn = {};
+const draw = {
+ 0: () => ch('c_fat', 'bar', MES, [{data: D.fat, backgroundColor: COL[0], borderRadius: 4}], {scales: {y: {ticks: {callback: v => 'R$ ' + v / 1000 + 'k'}}}, plugins: {legend: {display: false}}}),
+ 1: () => {
+  ch('c_fun', 'bar', ['Leads', 'Agendaram', 'Compareceram', 'Viraram clientes'], [{data: D.funil, backgroundColor: COL[1], borderRadius: 4}], {indexAxis: 'y', plugins: {legend: {display: false}}});
+  const p = D.canais.filter(c => c.roas != null);
+  ch('c_roas', 'bar', p.map(c => c.canal), [{data: p.map(c => c.roas), backgroundColor: COL[2], borderRadius: 4}], {plugins: {legend: {display: false}}});
+ },
+ 2: () => {
+  ch('c_oc', 'line', MES, [{data: D.ocup, borderColor: COL[1], backgroundColor: COL[1], tension: .3}], pct);
+  ch('c_dow', 'bar', D.dow.n, [{data: D.dow.v, backgroundColor: COL[0], borderRadius: 4}], pct);
+  ch('c_vis', 'bar', D.vis.n, [{data: D.vis.v, backgroundColor: COL[3], borderRadius: 4}], {plugins: {legend: {display: false}}});
+  ch('c_prof', 'bar', D.prof.n, [{data: D.prof.v, backgroundColor: COL[1], borderRadius: 4}], {scales: {y: {ticks: {callback: v => 'R$ ' + v / 1000 + 'k'}}}, plugins: {legend: {display: false}}});
+ },
+ 3: () => {
+  ch('c_proc', 'bar', D.proc.n, [{label: 'Receita', data: D.proc.fat, backgroundColor: COL[0]}, {label: 'Margem', data: D.proc.margem, backgroundColor: COL[2]}], {indexAxis: 'y', scales: {x: {ticks: {callback: v => 'R$ ' + v / 1000 + 'k'}}}});
+  ch('c_tk', 'line', MES, [{data: D.ticket, borderColor: COL[3], backgroundColor: COL[3], tension: .3}], {plugins: {legend: {display: false}}});
+  ch('c_pay', 'doughnut', D.pay.n, [{data: D.pay.v, backgroundColor: COL}], {});
+ }
+};
+const names = ['Visão geral', 'Marketing', 'Operação', 'Financeiro'], nav = document.getElementById('nav');
+names.forEach((n, i) => {
+ const b = document.createElement('button'); b.textContent = n; nav.appendChild(b);
+ b.onclick = () => {
+  nav.querySelectorAll('button').forEach((x, j) => x.classList.toggle('on', i === j));
+  document.querySelectorAll('.tab').forEach((x, j) => x.classList.toggle('on', i === j));
+  if (!drawn[i]) { draw[i](); drawn[i] = 1; }
+ };
+});
+nav.firstChild.click();
+</script>
+</body>
+</html>
