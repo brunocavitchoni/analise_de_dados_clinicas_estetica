@@ -60,6 +60,33 @@ nav{margin-top:0}
 .hm .mx{outline:2px solid var(--ink);outline-offset:1px}
 .lg .n{font-weight:600;color:var(--ink)}
 .sc{max-height:460px;overflow:auto}.sc th{position:sticky;top:0;background:var(--card)}
+
+/* As tabelas largas rolam dentro do cartão sem alargar a página. */
+.grid > *, .g6 > *, .kpis > *, .k > div, .h { min-width: 0; }
+.h canvas { max-width: 100%; }
+.wrap { max-width: 100%; }
+.k b { overflow-wrap: anywhere; }
+@media (max-width: 979px) {
+  .k { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+@media (max-width: 600px) {
+  header, nav, main { padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right)); }
+  .band header { padding-block: 18px; }
+  nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+  nav button { white-space: normal; min-height: 44px; font-size: 13px; }
+  .kpis { gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .c, .k { padding: 12px; }
+  .k b { font-size: clamp(17px, 4.7vw, 23px); }
+  .ic { height: 34px; width: 34px; }
+  .lg { flex-wrap: wrap; }
+  .lg i { width: 58px; }
+  .fl input, .fl select { min-width: 0; max-width: 100%; flex: 1 1 150px; font-size: 16px; }
+  .wrap:has(table), .wrap:has(#hm2) { padding-bottom: 6px; }
+}
+@media (max-width: 349px) {
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+  .k { flex-direction: row; align-items: center; }
+}
 </style>
 </head>
 <body>
